@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace UrlShortener.Controllers
 {
-	[Route("api/[controller]")]
 	[ApiController]
 	public class ShortenerController : ControllerBase
 	{
