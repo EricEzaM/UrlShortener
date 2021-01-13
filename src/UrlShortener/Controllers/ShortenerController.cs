@@ -20,12 +20,12 @@ namespace UrlShortener.Controllers
 		}
 
 		[HttpPost("shorten")]
-		public ActionResult<string> Shorten([FromBody] string url)
+		public async Task<ActionResult<string>> Shorten([FromBody] string url)
 		{
 			string key = _keyGenerator.GetKey(6);
 
 			_shortenerContext.Add(new ShortenedUrl() { Key = key, Url = url });
-			_shortenerContext.SaveChanges();
+			await _shortenerContext.SaveChangesAsync();
 
 			return key;
 		}
