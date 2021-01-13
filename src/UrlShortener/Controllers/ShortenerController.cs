@@ -22,12 +22,20 @@ namespace UrlShortener.Controllers
 		[HttpPost("shorten")]
 		public async Task<ActionResult<string>> Shorten([FromBody] string url)
 		{
-			string key = _keyGenerator.GetKey(6);
+			// TODO: Move validation somewhere else
+			if (Uri.TryCreate(url, UriKind.Absolute, out Uri uri) && 
+				uri.IsWellFormedOriginalString() && 
+				(uri.Scheme == Uri.UriSchemeHttps || uri.Scheme == Uri.UriSchemeHttp))
+			{
+				string key = _keyGenerator.GetKey(6);
 
-			_shortenerContext.Add(new ShortenedUrl() { Key = key, Url = url });
-			await _shortenerContext.SaveChangesAsync();
+				_shortenerContext.Add(new ShortenedUrl() { Key = key, Url = url });
+				await _shortenerContext.SaveChangesAsync();
 
-			return key;
+				return key;
+			}
+
+			return BadRequest("Invalid URL");
 		}
 
 		[HttpGet("{key}")]
