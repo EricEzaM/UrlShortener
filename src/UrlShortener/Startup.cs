@@ -30,6 +30,8 @@ namespace UrlShortener
 			services.AddDbContext<ShortenerContext>(options =>
 			{
 				options.UseNpgsql("connectionstring");
+				// For PostgreSQL, use snake case.
+				options.UseSnakeCaseNamingConvention();
 			});
 		}
 
