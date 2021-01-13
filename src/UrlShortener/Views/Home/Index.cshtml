@@ -5,4 +5,14 @@
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+    <div>
+        <input id="input" type="text" name="url" value="" placeholder="Type/Paste URL Here" class="d-block mx-auto"/>
+        <button id="submit" class="d-block mx-auto btn btn btn-primary" onclick="shorten()">Shorten</button>
+        <a id="result" class="d-block mx-auto"></a>
+    </div>
 </div>
+
+@section Scripts {
+    <script src="~/js/index.js" asp-append-version="true"></script>
+}
