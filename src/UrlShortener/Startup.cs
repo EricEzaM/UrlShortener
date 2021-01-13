@@ -29,7 +29,7 @@ namespace UrlShortener
 			services.AddControllersWithViews();
 			services.AddDbContext<ShortenerContext>(options =>
 			{
-				options.UseNpgsql("connectionstring");
+				options.UseNpgsql(Configuration.GetConnectionString("UrlShortener"));
 				// For PostgreSQL, use snake case.
 				options.UseSnakeCaseNamingConvention();
 			});

@@ -11,11 +11,11 @@ namespace UrlShortener.Controllers
 	public class ShortenerController : ControllerBase
 	{
 		private readonly IKeyGenerator _keyGenerator;
+		private readonly ShortenerContext _shortenerContext;
 
-		private static List<ShortenedUrl> shortenedUrls = new List<ShortenedUrl>();
-
-		public ShortenerController(IKeyGenerator keyGenerator)
+		public ShortenerController(ShortenerContext shortenerContext, IKeyGenerator keyGenerator)
 		{
+			_shortenerContext = shortenerContext;
 			_keyGenerator = keyGenerator;
 		}
 
@@ -24,7 +24,8 @@ namespace UrlShortener.Controllers
 		{
 			string key = _keyGenerator.GetKey(6);
 
-			shortenedUrls.Add(new ShortenedUrl() { Id = 1, Key = key, Url = url });
+			_shortenerContext.Add(new ShortenedUrl() { Key = key, Url = url });
+			_shortenerContext.SaveChanges();
 
 			return key;
 		}
@@ -32,7 +33,14 @@ namespace UrlShortener.Controllers
 		[HttpGet("{key}")]
 		public IActionResult GoTo([FromRoute]string key)
 		{
-			return Redirect(shortenedUrls.FirstOrDefault(su => su.Key == key).Url);
+			var shortenedUrl = _shortenerContext.ShortenedUrls.FirstOrDefault(su => su.Key == key);
+
+			if (shortenedUrl != null)
+			{
+				return Redirect(shortenedUrl.Url);
+			}
+
+			return BadRequest("Invalid Key");
 		}
 	}
 }
