@@ -14,3 +14,11 @@ I manually apply migrations to the database by using `Add-Migration` and then `S
 1. From root directory, start up database using `docker-compose -f database/docker-compose.yml up`
 1. Start application using `dotnet run --project src/UrlShortener/UrlShortener.csproj`
 1. Navigate to `localhost:5001` for the app, `localhost:8080` for adminer (to explore the database; use username & password "postgres"), and you can use API endpoints of `/shortener` (post, body="link") and `/{shortenedKey}` (get).
+
+### Future Features to add...?
+
+- [ ] Better validation
+- [ ] Checking against Google API of malware/blacklisted sites
+- [ ] User accounts 
+- [ ] Custom URL - make your own URL rather than an auto-generated one
+- [ ] Click counter - how often was a link clicked?
