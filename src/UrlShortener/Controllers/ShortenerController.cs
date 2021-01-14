@@ -20,9 +20,10 @@ namespace UrlShortener.Controllers
 		}
 
 		[HttpPost("shorten")]
-		public async Task<ActionResult<string>> Shorten([FromBody] string url)
+		public async Task<IActionResult> Shorten([FromBody] string url)
 		{
 			// TODO: Move validation somewhere else
+			// Ensures URL is valid
 			if (Uri.TryCreate(url, UriKind.Absolute, out Uri uri) && 
 				uri.IsWellFormedOriginalString() && 
 				(uri.Scheme == Uri.UriSchemeHttps || uri.Scheme == Uri.UriSchemeHttp))
@@ -32,10 +33,10 @@ namespace UrlShortener.Controllers
 				_shortenerContext.Add(new ShortenedUrl() { Key = key, Url = url });
 				await _shortenerContext.SaveChangesAsync();
 
-				return key;
+				return Ok(new { key });
 			}
 
-			return BadRequest("Invalid URL");
+			return BadRequest(new { error = "Invalid URL" });
 		}
 
 		[HttpGet("{key}")]
@@ -43,12 +44,7 @@ namespace UrlShortener.Controllers
 		{
 			var shortenedUrl = _shortenerContext.ShortenedUrls.FirstOrDefault(su => su.Key == key);
 
-			if (shortenedUrl != null)
-			{
-				return Redirect(shortenedUrl.Url);
-			}
-
-			return BadRequest("Invalid Key");
+			return shortenedUrl != null ? Redirect(shortenedUrl.Url) : BadRequest(new { error = "Invalid URL" });
 		}
 	}
 }

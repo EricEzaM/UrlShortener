@@ -9,25 +9,25 @@
         body: JSON.stringify(url)
     })
     .then(async (res) => {
-        const text = await res.text()
+        const json = await res.json()
         if (res.ok) {
-            updateResult(text)
-            return
+            updateResult(json)
         }
-        throw new Error(text)
+        else {
+            handleError(json)
+        }
     })
-    .catch(err => handleError(err))
 }
 
 function updateResult(result) {
     const elem = document.getElementById("result")
-    const link = window.location.href + result
+    const link = window.location.href + result.key
     elem.innerText = link
     elem.setAttribute("href", link)
 }
 
 function handleError(error) {
     const elem = document.getElementById("result")
-    elem.innerText = error
+    elem.innerText = error.error
     elem.removeAttribute("href")
 }
